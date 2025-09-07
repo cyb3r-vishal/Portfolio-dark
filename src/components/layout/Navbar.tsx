@@ -1,12 +1,13 @@
 import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Link, useLocation } from 'react-router-dom';
-import { FaLock, FaUnlock, FaCode, FaUserSecret, FaBug, FaTerminal, FaNewspaper } from 'react-icons/fa';
+import { FaLock, FaCode, FaBug, FaTerminal, FaNewspaper } from 'react-icons/fa';
 import { useBlog } from '@/hooks/use-blog';
 
 const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
   const [timeString, setTimeString] = useState('');
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { posts, loadPosts } = useBlog();
   const location = useLocation();
 
@@ -25,14 +26,14 @@ const Navbar = () => {
 
     window.addEventListener('scroll', handleScroll);
     const timer = setInterval(updateTime, 1000);
-    updateTime(); // Initial call
-    loadPosts(); // Load blog posts for count
+    updateTime();
+    loadPosts();
 
     return () => {
       window.removeEventListener('scroll', handleScroll);
       clearInterval(timer);
     };
-  }, []);
+  }, [loadPosts]);
 
   const publishedPostsCount = posts.filter(post => post.status === 'published').length;
 
@@ -49,6 +50,10 @@ const Navbar = () => {
     },
     { name: 'CONTACT', icon: <FaLock className="mr-1" />, href: '#contact', isScroll: true },
   ];
+
+  const toggleMobileMenu = () => {
+    setIsMobileMenuOpen(prev => !prev);
+  };
 
   return (
     <motion.header
@@ -134,10 +139,91 @@ const Navbar = () => {
           })}
         </nav>
         
-        <button className="md:hidden text-primary">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
+        <button
+          className="md:hidden text-primary focus:outline-none"
+          onClick={toggleMobileMenu}
+          aria-label="Toggle mobile menu"
+          aria-expanded={isMobileMenuOpen}
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            {isMobileMenuOpen ? (
+              <path d="M6 18L18 6M6 6l12 12" />
+            ) : (
+              <>
+                <line x1="4" x2="20" y1="12" y2="12" />
+                <line x1="4" x2="20" y1="6" y2="6" />
+                <line x1="4" x2="20" y1="18" y2="18" />
+              </>
+            )}
+          </svg>
         </button>
       </div>
+      
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <motion.nav
+            className="md:hidden bg-background/95 backdrop-blur-md mt-2 px-4 py-4"
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.2 }}
+          >
+            <div className="flex flex-col space-y-2">
+              {navItems.map((item, index) => {
+                const isActive = item.isScroll 
+                  ? location.pathname === '/' && location.hash === item.href
+                  : location.pathname === item.href;
+                
+                if (item.isScroll) {
+                  return (
+                    <a
+                      key={index}
+                      href={item.href}
+                      className={`px-3 py-2 font-hacker text-sm font-medium hover:text-primary flex items-center ${isActive ? 'text-primary' : ''}`}
+                      onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                      {item.icon}
+                      {item.name}
+                      {item.badge && (
+                        <span className="ml-1 bg-primary text-primary-foreground text-xs rounded-full px-1.5 py-0.5 min-w-[18px] h-[18px] flex items-center justify-center">
+                          {item.badge}
+                        </span>
+                      )}
+                    </a>
+                  );
+                } else {
+                  return (
+                    <Link
+                      key={index}
+                      to={item.href}
+                      className={`px-3 py-2 font-hacker text-sm font-medium hover:text-primary flex items-center ${isActive ? 'text-primary' : ''}`}
+                      onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                      {item.icon}
+                      {item.name}
+                      {item.badge && (
+                        <span className="ml-1 bg-primary text-primary-foreground text-xs rounded-full px-1.5 py-0.5 min-w-[18px] h-[18px] flex items-center justify-center">
+                          {item.badge}
+                        </span>
+                      )}
+                    </Link>
+                  );
+                }
+              })}
+            </div>
+          </motion.nav>
+        )}
+      </AnimatePresence>
       
       <div className="w-full h-0.5 bg-gradient-to-r from-transparent via-primary to-transparent mt-2"></div>
     </motion.header>
