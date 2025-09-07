@@ -58,6 +58,12 @@
     font-family: 'Share Tech Mono', monospace;
   }
   
+  .font-cyber {
+    font-family: 'Share Tech Mono', monospace;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+  }
+  
   .font-mono {
     font-family: 'Share Tech Mono', monospace;
   }

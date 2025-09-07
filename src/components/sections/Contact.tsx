@@ -72,7 +72,7 @@ const Contact = () => {
   };
   
   return (
-    <section id="contact" className="py-20 relative overflow-hidden">
+    <section id="contact" className="py-16 relative overflow-hidden">
       {/* Background Effects */}
       <div className="absolute inset-0 cyber-grid opacity-5"></div>
       

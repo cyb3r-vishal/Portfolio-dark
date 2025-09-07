@@ -16,12 +16,12 @@ export type Profile = {
 };
 
 const DEFAULT_PROFILE: Profile = {
-  name: 'Vishal Chauhan',
+  name: 'Cyb3r Vishal',
   headline: 'Ethical Hacker & Developer',
-  bio: "I’m Vishal Chauhan, a passionate web developer and ethical hacker pursuing a B.Sc. in Electronics at Maharaja Agrasen College, University of Delhi. My journey combines frontend development with cybersecurity research, where I focus on building secure, scalable web apps while testing and improving the security of digital systems.",
-  email: 'chauhanvishal5663@gmail.com',
+  bio: "I’m Vishal, a passionate web developer and ethical hacker pursuing a B.Sc. in Electronics at University of Delhi. My journey combines frontend development with cybersecurity research, where I focus on building secure, scalable web apps while testing and improving the security of digital systems.",
+  email: 'Anonymous@gmail.com',
   phone: '+91 987-115-0322',
-  portfolio: 'https://vishalchauhanportfolio.netlify.app',
+  portfolio: 'https://vishal-portfoli.netlify.app',
   website: '',
   github: '',
   twitter: '',

@@ -12,6 +12,23 @@ dist
 dist-ssr
 *.local
 
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Test results and reports
+test-results/
+playwright-report/
+
+# Build and temp files
+.zencoder/
+server.log
+todo.md
+template_config.json
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

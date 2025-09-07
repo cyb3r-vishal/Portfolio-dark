@@ -153,7 +153,7 @@ const Projects = () => {
   }, [controls, inView]);
   
   return (
-    <section id="projects" className="py-20 relative overflow-hidden bg-muted/20">
+    <section id="projects" className="py-16 relative overflow-hidden bg-muted/20">
       {/* Background Effects */}
       <div className="absolute inset-0 cyber-grid opacity-5"></div>
       

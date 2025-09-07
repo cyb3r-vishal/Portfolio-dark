@@ -1,10 +1,14 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { FaLock, FaUnlock, FaCode, FaUserSecret, FaBug, FaTerminal } from 'react-icons/fa';
+import { Link, useLocation } from 'react-router-dom';
+import { FaLock, FaUnlock, FaCode, FaUserSecret, FaBug, FaTerminal, FaNewspaper } from 'react-icons/fa';
+import { useBlog } from '@/hooks/use-blog';
 
 const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
   const [timeString, setTimeString] = useState('');
+  const { posts, loadPosts } = useBlog();
+  const location = useLocation();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -22,6 +26,7 @@ const Navbar = () => {
     window.addEventListener('scroll', handleScroll);
     const timer = setInterval(updateTime, 1000);
     updateTime(); // Initial call
+    loadPosts(); // Load blog posts for count
 
     return () => {
       window.removeEventListener('scroll', handleScroll);
@@ -29,11 +34,20 @@ const Navbar = () => {
     };
   }, []);
 
+  const publishedPostsCount = posts.filter(post => post.status === 'published').length;
+
   const navItems = [
-    { name: 'HOME', icon: <FaTerminal className="mr-1" /> },
-    { name: 'ABOUT', icon: <FaCode className="mr-1" /> },
-    { name: 'EXPLOITS', icon: <FaBug className="mr-1" /> },
-    { name: 'CONTACT', icon: <FaLock className="mr-1" /> },
+    { name: 'HOME', icon: <FaTerminal className="mr-1" />, href: '/', isScroll: false },
+    { name: 'ABOUT', icon: <FaCode className="mr-1" />, href: '#about', isScroll: true },
+    { name: 'EXPLOITS', icon: <FaBug className="mr-1" />, href: '#projects', isScroll: true },
+    { 
+      name: 'BLOG', 
+      icon: <FaNewspaper className="mr-1" />,
+      badge: publishedPostsCount > 0 ? publishedPostsCount : null,
+      href: '/blog',
+      isScroll: false
+    },
+    { name: 'CONTACT', icon: <FaLock className="mr-1" />, href: '#contact', isScroll: true },
   ];
 
   return (
@@ -61,25 +75,63 @@ const Navbar = () => {
         </motion.div>
         
         <nav className="hidden md:flex space-x-1">
-          {navItems.map((item, index) => (
-            <motion.a
-              key={index}
-              href={`#${item.name.toLowerCase()}`}
-              className="px-3 py-2 font-hacker text-sm font-medium hover:text-primary flex items-center relative overflow-hidden group"
-              whileHover={{ scale: 1.05 }}
-            >
-              <span className="relative z-10 flex items-center">
-                {item.icon}
-                {item.name}
-              </span>
-              <motion.span 
-                className="absolute inset-0 bg-muted z-0"
-                initial={{ height: 0 }}
-                whileHover={{ height: '100%' }}
-                transition={{ duration: 0.1 }}
-              />
-            </motion.a>
-          ))}
+          {navItems.map((item, index) => {
+            const isActive = item.isScroll 
+              ? location.pathname === '/' && location.hash === item.href
+              : location.pathname === item.href;
+            
+            if (item.isScroll) {
+              return (
+                <motion.a
+                  key={index}
+                  href={item.href}
+                  className={`px-3 py-2 font-hacker text-sm font-medium hover:text-primary flex items-center relative overflow-hidden group ${isActive ? 'text-primary' : ''}`}
+                  whileHover={{ scale: 1.05 }}
+                >
+                  <span className="relative z-10 flex items-center">
+                    {item.icon}
+                    {item.name}
+                    {item.badge && (
+                      <span className="ml-1 bg-primary text-primary-foreground text-xs rounded-full px-1.5 py-0.5 min-w-[18px] h-[18px] flex items-center justify-center">
+                        {item.badge}
+                      </span>
+                    )}
+                  </span>
+                  <motion.span 
+                    className="absolute inset-0 bg-muted z-0"
+                    initial={{ height: 0 }}
+                    whileHover={{ height: '100%' }}
+                    transition={{ duration: 0.1 }}
+                  />
+                </motion.a>
+              );
+            } else {
+              return (
+                <motion.div key={index} whileHover={{ scale: 1.05 }}>
+                  <Link
+                    to={item.href}
+                    className={`px-3 py-2 font-hacker text-sm font-medium hover:text-primary flex items-center relative overflow-hidden group ${isActive ? 'text-primary' : ''}`}
+                  >
+                    <span className="relative z-10 flex items-center">
+                      {item.icon}
+                      {item.name}
+                      {item.badge && (
+                        <span className="ml-1 bg-primary text-primary-foreground text-xs rounded-full px-1.5 py-0.5 min-w-[18px] h-[18px] flex items-center justify-center">
+                          {item.badge}
+                        </span>
+                      )}
+                    </span>
+                    <motion.span 
+                      className="absolute inset-0 bg-muted z-0"
+                      initial={{ height: 0 }}
+                      whileHover={{ height: '100%' }}
+                      transition={{ duration: 0.1 }}
+                    />
+                  </Link>
+                </motion.div>
+              );
+            }
+          })}
         </nav>
         
         <button className="md:hidden text-primary">

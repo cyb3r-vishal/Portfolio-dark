@@ -7,6 +7,8 @@ import Index from './pages/Index';
 import NotFound from './pages/NotFound';
 import AdminLogin from '@/pages/AdminLogin';
 import AdminProfile from '@/pages/AdminProfile';
+import BlogPost from '@/pages/BlogPost';
+import BlogPage from '@/pages/BlogPage';
 
 // Lazy-load ProtectedRoute to avoid importing its dependencies on initial load
 const ProtectedRoute = lazy(() => import('@/components/layout/ProtectedRoute'));
@@ -21,6 +23,8 @@ const App = () => (
         <Suspense fallback={null}>
           <Routes>
             <Route path="/" element={<Index />} />
+            <Route path="/blog" element={<BlogPage />} />
+            <Route path="/blog/:slug" element={<BlogPost />} />
             <Route path="/admin/login" element={<AdminLogin />} />
             <Route element={<ProtectedRoute />}>
               <Route path="/admin" element={<AdminProfile />} />
