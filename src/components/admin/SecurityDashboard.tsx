@@ -28,18 +28,31 @@ export default function SecurityDashboard() {
   }, []);
 
   const loadLogs = () => {
-    const auditLogs = AuditLogger.getLogs();
-    setLogs(auditLogs);
+    const allAuditLogs = AuditLogger.getLogs();
+    
+    // Filter out session restored logs
+    const auditLogs = allAuditLogs.filter(log => 
+      !log.action.includes('session_restored')
+    );
+    
+    // Only show login attempts and blog-related events
+    const filteredLogs = auditLogs.filter(log => 
+      log.action.includes('login') || 
+      log.action.includes('blog_post') || 
+      log.action.includes('post_')
+    );
+    
+    setLogs(filteredLogs);
     
     // Calculate stats
-    const totalLogs = auditLogs.length;
-    const loginAttempts = auditLogs.filter(log => 
+    const totalLogs = filteredLogs.length;
+    const loginAttempts = filteredLogs.filter(log => 
       log.action.includes('login_attempt') || log.action.includes('login_success')
     ).length;
-    const failedLogins = auditLogs.filter(log => 
+    const failedLogins = filteredLogs.filter(log => 
       log.action.includes('login_failed') || log.action.includes('login_error')
     ).length;
-    const blogActions = auditLogs.filter(log => 
+    const blogActions = filteredLogs.filter(log => 
       log.action.includes('blog_post')
     ).length;
 

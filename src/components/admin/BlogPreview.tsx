@@ -135,6 +135,33 @@ export default function BlogPreview({ post, onClose }: BlogPreviewProps) {
                     dangerouslySetInnerHTML={{ 
                       __html: processMarkdown(previewPost.content) 
                     }}
+                    // Add script to enable copy button functionality
+                    ref={(node) => {
+                      if (node) {
+                        // Execute scripts embedded in the markdown content
+                        setTimeout(() => {
+                          // First, remove any existing event listeners by cloning and replacing buttons
+                          const copyButtons = node.querySelectorAll('.copy-code-button');
+                          copyButtons.forEach(oldButton => {
+                            const newButton = oldButton.cloneNode(true);
+                            if (oldButton.parentNode) {
+                              oldButton.parentNode.replaceChild(newButton, oldButton);
+                            }
+                          });
+                          
+                          // Then execute scripts to set up new event listeners
+                          const scripts = node.querySelectorAll('script');
+                          scripts.forEach(oldScript => {
+                            const newScript = document.createElement('script');
+                            Array.from(oldScript.attributes).forEach(attr => {
+                              newScript.setAttribute(attr.name, attr.value);
+                            });
+                            newScript.innerHTML = oldScript.innerHTML;
+                            oldScript.parentNode?.replaceChild(newScript, oldScript);
+                          });
+                        }, 0);
+                      }
+                    }}
                   />
                 ) : (
                   <div className="text-center py-12 text-muted-foreground">

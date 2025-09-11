@@ -189,6 +189,22 @@ export default function BlogPost() {
                 dangerouslySetInnerHTML={{ 
                   __html: processMarkdown(post.content) 
                 }}
+                ref={(node) => {
+                  if (node) {
+                    // Execute scripts embedded in the markdown content
+                    setTimeout(() => {
+                      const scripts = node.querySelectorAll('script');
+                      scripts.forEach(oldScript => {
+                        const newScript = document.createElement('script');
+                        Array.from(oldScript.attributes).forEach(attr => {
+                          newScript.setAttribute(attr.name, attr.value);
+                        });
+                        newScript.innerHTML = oldScript.innerHTML;
+                        oldScript.parentNode?.replaceChild(newScript, oldScript);
+                      });
+                    }, 0);
+                  }
+                }}
               />
             </CardContent>
           </Card>

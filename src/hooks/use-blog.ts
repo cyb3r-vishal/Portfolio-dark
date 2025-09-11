@@ -49,25 +49,8 @@ export function useBlog() {
 
   // Load posts
   const loadPosts = useCallback(async (includeUnpublished = false) => {
+    console.log("loadPosts called with includeUnpublished:", includeUnpublished);
     setLoading(true);
-    
-    if (!isSupabaseConfigured) {
-      // Local mode: load from localStorage
-      const localPosts = localStorage.getItem('local_blog_posts');
-      if (localPosts) {
-        try {
-          const parsed = JSON.parse(localPosts) as BlogPost[];
-          setPosts(includeUnpublished ? parsed : parsed.filter(p => p.status === 'published'));
-        } catch (error) {
-          console.error('Error parsing local blog posts:', error);
-          setPosts([]);
-        }
-      } else {
-        setPosts([]);
-      }
-      setLoading(false);
-      return;
-    }
 
     try {
       let query = supabase
@@ -98,13 +81,13 @@ export function useBlog() {
 
   // Create new post
   const createPost = useCallback(async (postData: CreateBlogPost): Promise<BlogPost | null> => {
-    if (!user && isSupabaseConfigured) {
+    if (!user) {
       toast.error('You must be logged in to create posts');
       return null;
     }
 
     // Rate limiting
-    const rateLimitKey = `create_post_${user?.id || 'local'}`;
+    const rateLimitKey = `create_post_${user.id}`;
     if (!RateLimiter.isAllowed(rateLimitKey, 5, 300000)) { // 5 posts per 5 minutes
       toast.error('Too many posts created recently. Please wait before creating another.');
       return null;
@@ -134,41 +117,6 @@ export function useBlog() {
 
     const slug = generateSlug(sanitizedData.title);
     const now = new Date().toISOString();
-    
-    const newPost: BlogPost = {
-      id: crypto.randomUUID(),
-      ...sanitizedData,
-      slug,
-      published_at: sanitizedData.status === 'published' ? now : undefined,
-      created_at: now,
-      updated_at: now,
-    };
-
-    if (!isSupabaseConfigured) {
-      // Local mode
-      const existingPosts = localStorage.getItem('local_blog_posts');
-      const posts = existingPosts ? JSON.parse(existingPosts) : [];
-      
-      // Check for duplicate slug
-      if (posts.some((p: BlogPost) => p.slug === slug)) {
-        toast.error('A post with this title already exists');
-        return null;
-      }
-      
-      posts.unshift(newPost);
-      localStorage.setItem('local_blog_posts', JSON.stringify(posts));
-      
-      AuditLogger.log('blog_post_created', {
-        postId: newPost.id,
-        title: newPost.title,
-        status: newPost.status,
-        method: 'local_storage'
-      });
-      
-      toast.success('Blog post created successfully');
-      setPosts(posts => [newPost, ...posts]);
-      return newPost;
-    }
 
     try {
       const { data, error } = await supabase
@@ -176,7 +124,7 @@ export function useBlog() {
         .insert({
           ...sanitizedData,
           slug,
-          owner: user!.id,
+          owner: user.id,
           published_at: sanitizedData.status === 'published' ? now : null,
         })
         .select()
@@ -221,7 +169,7 @@ export function useBlog() {
 
   // Update post
   const updatePost = useCallback(async (postData: UpdateBlogPost): Promise<boolean> => {
-    if (!user && isSupabaseConfigured) {
+    if (!user) {
       toast.error('You must be logged in to update posts');
       return false;
     }
@@ -239,46 +187,8 @@ export function useBlog() {
 
     // Set published_at if status changed to published
     if (postData.status === 'published') {
-      // Check if this post was previously unpublished - get from localStorage for accuracy
-      if (!isSupabaseConfigured) {
-        const localPosts = localStorage.getItem('local_blog_posts');
-        if (localPosts) {
-          const posts = JSON.parse(localPosts) as BlogPost[];
-          const existingPost = posts.find(p => p.id === postData.id);
-          if (existingPost && existingPost.status !== 'published') {
-            updateData.published_at = now;
-          }
-        }
-      } else {
-        // For Supabase, we'll handle this in the database query logic
-        updateData.published_at = now; // Set it anyway, database can handle duplicates
-      }
-    }
-
-    if (!isSupabaseConfigured) {
-      // Local mode
-      const existingPosts = localStorage.getItem('local_blog_posts');
-      if (!existingPosts) return false;
-      
-      const posts = JSON.parse(existingPosts) as BlogPost[];
-      const postIndex = posts.findIndex(p => p.id === postData.id);
-      
-      if (postIndex === -1) {
-        toast.error('Post not found');
-        return false;
-      }
-
-      // Check for duplicate slug if title changed
-      if (updateData.slug && posts.some((p, i) => i !== postIndex && p.slug === updateData.slug)) {
-        toast.error('A post with this title already exists');
-        return false;
-      }
-
-      posts[postIndex] = { ...posts[postIndex], ...updateData };
-      localStorage.setItem('local_blog_posts', JSON.stringify(posts));
-      toast.success('Blog post updated successfully');
-      setPosts(posts => posts.map(p => p.id === postData.id ? { ...p, ...updateData } : p));
-      return true;
+      // For Supabase, we'll handle this in the database query logic
+      updateData.published_at = now; // Set it anyway, database can handle duplicates
     }
 
     try {
@@ -286,7 +196,7 @@ export function useBlog() {
         .from('blog_posts')
         .update(updateData)
         .eq('id', postData.id)
-        .eq('owner', user!.id);
+        .eq('owner', user.id);
 
       if (error) {
         if (error.code === '23505') { // Unique constraint violation
@@ -310,23 +220,9 @@ export function useBlog() {
 
   // Delete post
   const deletePost = useCallback(async (postId: string): Promise<boolean> => {
-    if (!user && isSupabaseConfigured) {
+    if (!user) {
       toast.error('You must be logged in to delete posts');
       return false;
-    }
-
-    if (!isSupabaseConfigured) {
-      // Local mode
-      const existingPosts = localStorage.getItem('local_blog_posts');
-      if (!existingPosts) return false;
-      
-      const posts = JSON.parse(existingPosts) as BlogPost[];
-      const filteredPosts = posts.filter(p => p.id !== postId);
-      
-      localStorage.setItem('local_blog_posts', JSON.stringify(filteredPosts));
-      toast.success('Blog post deleted successfully');
-      setPosts(posts => posts.filter(p => p.id !== postId));
-      return true;
     }
 
     try {
@@ -334,7 +230,7 @@ export function useBlog() {
         .from('blog_posts')
         .delete()
         .eq('id', postId)
-        .eq('owner', user!.id);
+        .eq('owner', user.id);
 
       if (error) {
         toast.error('Failed to delete blog post');
@@ -354,19 +250,6 @@ export function useBlog() {
 
   // Get single post by slug
   const getPostBySlug = async (slug: string): Promise<BlogPost | null> => {
-    if (!isSupabaseConfigured) {
-      const localPosts = localStorage.getItem('local_blog_posts');
-      if (localPosts) {
-        try {
-          const posts = JSON.parse(localPosts) as BlogPost[];
-          return posts.find(p => p.slug === slug && p.status === 'published') || null;
-        } catch {
-          return null;
-        }
-      }
-      return null;
-    }
-
     try {
       const { data, error } = await supabase
         .from('blog_posts')

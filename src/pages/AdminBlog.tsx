@@ -13,6 +13,7 @@ import { toast } from "sonner";
 import { Plus, Edit, Trash2, Eye, Calendar, Tag, FileText, Save, X, ExternalLink } from "lucide-react";
 import BlogPreview from "@/components/admin/BlogPreview";
 import PublishNotification from "@/components/admin/PublishNotification";
+import AdvancedEditor from "@/components/admin/AdvancedEditor";
 import { format } from "date-fns";
 
 export default function AdminBlog() {
@@ -291,17 +292,16 @@ export default function AdminBlog() {
 
       <div>
         <label className="text-sm font-medium">Content *</label>
-        <Textarea
-          value={contentValue}
-          onChange={handleContentChange}
-          placeholder="Write your blog post content here... (Markdown supported)"
-          rows={12}
-          className="mt-1 font-mono text-sm resize-y"
-          style={{ minHeight: '300px' }}
-          autoComplete="off"
-        />
+        <div className="mt-1">
+          <AdvancedEditor
+            value={contentValue}
+            onChange={setContentValue}
+            placeholder="Write your blog post content here..."
+            minHeight="400px"
+          />
+        </div>
         <p className="text-xs text-gray-500 mt-1">
-          You can use Markdown formatting (e.g., **bold**, *italic*, # headings, etc.)
+          Use the toolbar above to format your content. Click the ? icon for help.
         </p>
       </div>
 
@@ -477,25 +477,42 @@ export default function AdminBlog() {
                   </div>
                 </CardHeader>
                 <CardContent>
-                  <div className="flex items-center gap-4 text-sm text-gray-600 mb-3">
-                    <div className="flex items-center gap-1">
-                      <Calendar className="h-4 w-4" />
-                      {post.published_at 
-                        ? format(new Date(post.published_at), "MMM d, yyyy")
-                        : format(new Date(post.created_at), "MMM d, yyyy")
-                      }
-                    </div>
-                    {post.tags.length > 0 && (
-                      <div className="flex items-center gap-1">
-                        <Tag className="h-4 w-4" />
-                        {post.tags.slice(0, 3).join(", ")}
-                        {post.tags.length > 3 && ` +${post.tags.length - 3} more`}
+                  <div className="flex gap-4">
+                    {post.featured_image && (
+                      <div className="w-24 h-24 rounded-md overflow-hidden flex-shrink-0">
+                        <img
+                          src={post.featured_image}
+                          alt={post.title}
+                          className="w-full h-full object-cover"
+                          onError={(e) => {
+                            const target = e.target as HTMLImageElement;
+                            target.style.display = 'none';
+                          }}
+                        />
                       </div>
                     )}
+                    <div className="flex-1">
+                      <div className="flex items-center gap-4 text-sm text-gray-600 mb-3">
+                        <div className="flex items-center gap-1">
+                          <Calendar className="h-4 w-4" />
+                          {post.published_at 
+                            ? format(new Date(post.published_at), "MMM d, yyyy")
+                            : format(new Date(post.created_at), "MMM d, yyyy")
+                          }
+                        </div>
+                        {post.tags.length > 0 && (
+                          <div className="flex items-center gap-1">
+                            <Tag className="h-4 w-4" />
+                            {post.tags.slice(0, 3).join(", ")}
+                            {post.tags.length > 3 && ` +${post.tags.length - 3} more`}
+                          </div>
+                        )}
+                      </div>
+                      <p className="text-gray-700 line-clamp-3">
+                        {post.content.substring(0, 200)}...
+                      </p>
+                    </div>
                   </div>
-                  <p className="text-gray-700 line-clamp-3">
-                    {post.content.substring(0, 200)}...
-                  </p>
                 </CardContent>
               </Card>
             ))}

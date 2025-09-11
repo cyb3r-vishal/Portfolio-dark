@@ -49,50 +49,6 @@ export function useAuth() {
     // Run security checks in development
     checkSecurityHeaders();
 
-    if (!isSupabaseConfigured) {
-      const u = getLocalUser();
-      if (isMounted) {
-        setUser(u);
-        setSession(null);
-        setLoading(false);
-        if (u) {
-          AuditLogger.log('session_restored', { userId: u.id });
-        }
-      }
-      
-      const onStorage = () => {
-        if (!isMounted) return;
-        const newUser = getLocalUser();
-        const currentUser = userRef.current;
-        setUser(newUser);
-        if (newUser && !currentUser) {
-          AuditLogger.log('user_session_restored', { userId: newUser.id });
-        } else if (!newUser && currentUser) {
-          AuditLogger.log('user_session_expired', { userId: currentUser.id });
-        }
-      };
-      
-      window.addEventListener("storage", onStorage);
-      
-      // Set up session validation interval with ref to avoid stale closure
-      const sessionInterval = setInterval(() => {
-        if (!isMounted) return;
-        const currentUser = getLocalUser();
-        const stateUser = userRef.current;
-        if (!currentUser && stateUser) {
-          setUser(null);
-          toast.error('Session expired. Please log in again.');
-          AuditLogger.log('session_expired', { userId: stateUser.id });
-        }
-      }, 60000); // Check every minute
-      
-      return () => {
-        isMounted = false;
-        window.removeEventListener("storage", onStorage);
-        clearInterval(sessionInterval);
-      };
-    }
-
     supabase.auth.getSession().then(({ data, error }) => {
       if (!isMounted) return;
       

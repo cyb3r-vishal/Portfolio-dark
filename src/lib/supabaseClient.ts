@@ -1,29 +1,18 @@
 import { createClient } from "@supabase/supabase-js";
 
-// Expect these to be provided in a .env file with Vite prefix
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL as string | undefined;
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY as string | undefined;
+// Get Supabase credentials from environment variables
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL as string;
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY as string;
 
-export const isSupabaseConfigured = Boolean(supabaseUrl && supabaseAnonKey);
-
-// If missing, create a safe no-op client to avoid runtime crashes (e.g., NO_FCP)
-// You can add real values in a .env file later.
-let client;
-if (!isSupabaseConfigured) {
-  // eslint-disable-next-line no-console
-  console.warn("Missing VITE_SUPABASE_URL or VITE_SUPABASE_ANON_KEY. Using a disabled Supabase client.");
-  // Create a stub that throws only when API is actually used
-  client = new Proxy({} as any, {
-    get() {
-      return () => {
-        throw new Error(
-          "Supabase is not configured. Set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY in a .env file."
-        );
-      };
-    },
-  });
-} else {
-  client = createClient(supabaseUrl!, supabaseAnonKey!);
+// Ensure credentials are available
+if (!supabaseUrl || !supabaseAnonKey) {
+  throw new Error(
+    "Supabase credentials are missing. Make sure VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY are set in your .env file."
+  );
 }
 
-export const supabase = client;
+// Create and export the Supabase client
+export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+
+// For backward compatibility, always return true
+export const isSupabaseConfigured = true;
