@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -191,18 +191,30 @@ export default function BlogPost() {
                 }}
                 ref={(node) => {
                   if (node) {
-                    // Execute scripts embedded in the markdown content
-                    setTimeout(() => {
-                      const scripts = node.querySelectorAll('script');
-                      scripts.forEach(oldScript => {
-                        const newScript = document.createElement('script');
-                        Array.from(oldScript.attributes).forEach(attr => {
-                          newScript.setAttribute(attr.name, attr.value);
-                        });
-                        newScript.innerHTML = oldScript.innerHTML;
-                        oldScript.parentNode?.replaceChild(newScript, oldScript);
-                      });
-                    }, 0);
+                    // Delegated click handler for copy buttons
+                    const handler = async (e: Event) => {
+                      const target = e.target as HTMLElement;
+                      const btn = target.closest('.copy-code-button') as HTMLElement | null;
+                      if (btn && node.contains(btn)) {
+                        e.preventDefault();
+                        const codeId = btn.getAttribute('data-code-id');
+                        if (codeId) {
+                          const codeEl = node.querySelector(`#${CSS.escape(codeId)}`) as HTMLElement | null;
+                          if (codeEl) {
+                            try {
+                              const text = codeEl.textContent || '';
+                              await navigator.clipboard.writeText(text);
+                              btn.textContent = 'Copied!';
+                              setTimeout(() => { btn.textContent = 'Copy'; }, 2000);
+                            } catch {}
+                          }
+                        }
+                      }
+                    };
+                    node.addEventListener('click', handler);
+                    // Prevent native title tooltips on copy buttons
+                    const buttons = node.querySelectorAll('.copy-code-button');
+                    buttons.forEach((b) => b.removeAttribute('title'));
                   }
                 }}
               />
@@ -211,9 +223,9 @@ export default function BlogPost() {
 
           {/* Navigation */}
           <div className="mt-12 text-center">
-            <Button onClick={() => navigate('/')} size="lg">
+            <Button onClick={() => navigate('/blog')} size="lg">
               <ArrowLeft className="h-4 w-4 mr-2" />
-              Back to Portfolio
+              Back to Blog
             </Button>
           </div>
         </div>

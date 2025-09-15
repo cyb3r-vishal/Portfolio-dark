@@ -20,7 +20,7 @@ export default function ImageUploader({ onImageUrl }: ImageUploaderProps) {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    // Check file type
+  
     if (!file.type.startsWith('image/')) {
       toast.error('Please select an image file');
       return;

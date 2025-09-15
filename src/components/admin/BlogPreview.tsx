@@ -135,31 +135,32 @@ export default function BlogPreview({ post, onClose }: BlogPreviewProps) {
                     dangerouslySetInnerHTML={{ 
                       __html: processMarkdown(previewPost.content) 
                     }}
-                    // Add script to enable copy button functionality
                     ref={(node) => {
                       if (node) {
-                        // Execute scripts embedded in the markdown content
-                        setTimeout(() => {
-                          // First, remove any existing event listeners by cloning and replacing buttons
-                          const copyButtons = node.querySelectorAll('.copy-code-button');
-                          copyButtons.forEach(oldButton => {
-                            const newButton = oldButton.cloneNode(true);
-                            if (oldButton.parentNode) {
-                              oldButton.parentNode.replaceChild(newButton, oldButton);
+                        // Delegated click handler for copy buttons in preview
+                        const handler = async (e: Event) => {
+                          const target = e.target as HTMLElement;
+                          const btn = target.closest('.copy-code-button') as HTMLElement | null;
+                          if (btn && node.contains(btn)) {
+                            e.preventDefault();
+                            const codeId = btn.getAttribute('data-code-id');
+                            if (codeId) {
+                              const codeEl = node.querySelector(`#${CSS.escape(codeId)}`) as HTMLElement | null;
+                              if (codeEl) {
+                                try {
+                                  const text = codeEl.textContent || '';
+                                  await navigator.clipboard.writeText(text);
+                                  btn.textContent = 'Copied!';
+                                  setTimeout(() => { btn.textContent = 'Copy'; }, 2000);
+                                } catch {}
+                              }
                             }
-                          });
-                          
-                          // Then execute scripts to set up new event listeners
-                          const scripts = node.querySelectorAll('script');
-                          scripts.forEach(oldScript => {
-                            const newScript = document.createElement('script');
-                            Array.from(oldScript.attributes).forEach(attr => {
-                              newScript.setAttribute(attr.name, attr.value);
-                            });
-                            newScript.innerHTML = oldScript.innerHTML;
-                            oldScript.parentNode?.replaceChild(newScript, oldScript);
-                          });
-                        }, 0);
+                          }
+                        };
+                        node.addEventListener('click', handler);
+                        // Prevent native title tooltips on copy buttons in preview
+                        const buttons = node.querySelectorAll('.copy-code-button');
+                        buttons.forEach((b) => b.removeAttribute('title'));
                       }
                     }}
                   />
