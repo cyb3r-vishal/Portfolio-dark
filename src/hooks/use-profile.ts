@@ -49,25 +49,26 @@ export function useProfile() {
         return;
       }
 
-      if (!user) {
-        if (!cancelled) setLoading(false);
-        return;
-      }
-
-      const { data } = await supabase
+      // Supabase mode: always fetch a single public profile row so homepage is consistent
+      const { data, error } = await supabase
         .from('profile')
         .select('*')
-        .eq('owner', user.id)
+        .limit(1)
         .maybeSingle();
 
       if (!cancelled) {
-        setProfile(data ? { ...DEFAULT_PROFILE, ...data } : DEFAULT_PROFILE);
+        if (error) {
+          // Fallback to default if RLS blocks or no row
+          setProfile(DEFAULT_PROFILE);
+        } else {
+          setProfile(data ? { ...DEFAULT_PROFILE, ...data } : DEFAULT_PROFILE);
+        }
         setLoading(false);
       }
     }
 
     load();
-    // Re-load when user changes
+    // Re-load when user changes (e.g., after saving in dashboard)
   }, [user]);
 
   return { profile, loading };

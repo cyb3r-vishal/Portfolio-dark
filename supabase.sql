@@ -12,16 +12,19 @@ create table if not exists public.profile (
   updated_at timestamp with time zone default now()
 );
 
--- RLS: only owner can read/write their row
+-- RLS: allow public read of single profile, owner can write
 alter table public.profile enable row level security;
 
-create policy "profile_select_own" on public.profile
-for select using (auth.uid() = owner);
+-- Public can read profile (site shows a single public profile)
+create policy if not exists "profile_public_read" on public.profile
+for select
+using (true);
 
-create policy "profile_upsert_own" on public.profile
+-- Owner can insert/update their row
+create policy if not exists "profile_upsert_own" on public.profile
 for insert with check (auth.uid() = owner);
 
-create policy "profile_update_own" on public.profile
+create policy if not exists "profile_update_own" on public.profile
 for update using (auth.uid() = owner) with check (auth.uid() = owner);
 
 -- Table: blog_posts

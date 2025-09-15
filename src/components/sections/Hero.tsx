@@ -166,9 +166,10 @@ const Hero = () => {
               <span>VIEW EXPLOITS</span>
               <span className="absolute inset-0 border border-primary opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
             </Button>
-            
-            <Button variant="outline" size="lg" className="border-muted/50 bg-transparent text-muted-foreground hover:text-foreground relative group">
-              <FaUserSecret className="mr-2" />
+
+            {/* After clicking contact secure button they redirect to my tg channel */}
+            <Button onClick={() => window.open('https://t.me/AnonXBriyebot', '_blank')}  variant="outline" size="lg" className="border-muted/50 bg-transparent text-muted-foreground hover:text-foreground relative group">
+              <FaUserSecret className="mr-2" /> 
               <span>CONTACT: SECURE CHANNEL</span>
               <span className="absolute inset-0 border border-primary opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
             </Button>
