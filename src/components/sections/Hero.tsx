@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { motion, useAnimation, useInView } from 'framer-motion';
 import { Button } from '@/components/ui/button';
-import { FaTerminal, FaUserSecret } from 'react-icons/fa';
+import { FaTerminal, FaUser, FaFileDownload } from 'react-icons/fa';
 import { useProfile } from '@/hooks/use-profile';
 
 const typewriterVariants = {
@@ -92,7 +92,7 @@ const Hero = () => {
     }
     
     // Simulate terminal typing
-    const text = "> INITIALIZING SYSTEM...\n> BYPASSING SECURITY PROTOCOLS...\n> ACCESS GRANTED";
+    const text = "> INITIALIZING DEV ENVIRONMENT...\n> LOADING MERN STACK MODULES...\n> DEPLOYING CLOUD INFRASTRUCTURE...\n> SYSTEM ONLINE";
     let index = 0;
     const typeInterval = setInterval(() => {
       if (index < text.length) {
@@ -155,23 +155,34 @@ const Hero = () => {
           </motion.div>
           
           <motion.div 
-            className="flex flex-wrap gap-4"
+            className="flex flex-wrap gap-4 mt-8"
             initial="hidden"
             animate={controls}
             variants={fadeInUp}
             custom={2}
           >
-            <Button size="lg" className="relative group bg-muted hover:bg-muted/80 border border-primary text-primary hover:text-primary">
+            <Button size="lg" variant="outline" className="border-primary text-primary hover:bg-primary/10">
               <FaTerminal className="mr-2" />
-              <span>VIEW EXPLOITS</span>
-              <span className="absolute inset-0 border border-primary opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
+              <span>VIEW PROJECTS</span>
             </Button>
 
-            {/* After clicking contact secure button they redirect to my tg channel */}
-            <Button onClick={() => window.open('https://t.me/AnonXBriyebot', '_blank')}  variant="outline" size="lg" className="border-muted/50 bg-transparent text-muted-foreground hover:text-foreground relative group">
-              <FaUserSecret className="mr-2" /> 
-              <span>CONTACT: SECURE CHANNEL</span>
-              <span className="absolute inset-0 border border-primary opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
+            {/* Contact button - Highlighted */}
+            <Button 
+              onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })} 
+              size="lg" 
+              className="bg-primary text-primary-foreground hover:bg-primary/90 font-bold shadow-[0_0_20px_rgba(34,197,94,0.4)] transition-all duration-300 hover:scale-105"
+            >
+              <FaUser className="mr-2" /> 
+              <span>CONTACT ME</span>
+            </Button>
+
+            {/* Resume button - Highlighted */}
+            <Button 
+              size="lg" 
+              className="bg-white text-black hover:bg-gray-200 font-bold shadow-[0_0_20px_rgba(255,255,255,0.3)] transition-all duration-300 hover:scale-105"
+            >
+              <FaFileDownload className="mr-2" />
+              <span>RESUME</span>
             </Button>
           </motion.div>
         </div>

@@ -1,6 +1,7 @@
 import Navbar from '@/components/layout/Navbar';
 import Hero from '@/components/sections/Hero';
 import About from '@/components/sections/About';
+import Experience from '@/components/sections/Experience';
 import Projects from '@/components/sections/Projects';
 import BlogSection from '@/components/sections/BlogSection';
 import Contact from '@/components/sections/Contact';
@@ -12,6 +13,7 @@ export default function HomePage() {
       <main>
         <Hero />
         <About />
+        <Experience />
         <Projects />
         <Contact />
       </main>
@@ -19,10 +21,10 @@ export default function HomePage() {
       <footer className="py-8 relative overflow-hidden">
         <div className="container mx-auto px-4 text-center">
           <div className="mb-4 font-cyber text-sm">
-            <span className="text-primary">&copy; {new Date().getFullYear()}</span> | Cybersecurity Portfolio
+            <span className="text-primary">&copy; {new Date().getFullYear()}</span> | Full Stack Developer & Security Portfolio
           </div>
           <p className="text-xs text-muted-foreground font-mono">
-            Designed and developed with advanced security protocols.
+            Designed and developed with modern tech stack and security protocols.
           </p>
         </div>
       </footer>

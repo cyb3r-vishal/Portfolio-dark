@@ -86,7 +86,7 @@ const Contact = () => {
         >
           <div className="flex justify-center items-center mb-2">
             <div className="h-px w-12 bg-primary mr-4"></div>
-            <h2 className="font-mono text-primary text-sm uppercase tracking-wider">Secure Channel</h2>
+            <h2 className="font-mono text-primary text-sm uppercase tracking-wider">Get In Touch</h2>
             <div className="h-px w-12 bg-primary ml-4"></div>
           </div>
           
@@ -94,8 +94,8 @@ const Contact = () => {
           
           <div className="max-w-2xl mx-auto">
             <p className="text-muted-foreground mb-8">
-              Interested in collaborating on a security project or need consulting services? 
-              Send me an encrypted message through this secure form or connect via social platforms.
+              Interested in collaborating on a project or hiring for a full-stack role? 
+              Send me a message through this form or connect via social platforms.
             </p>
           </div>
         </motion.div>

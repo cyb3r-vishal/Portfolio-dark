@@ -16,13 +16,13 @@ export type Profile = {
 };
 
 const DEFAULT_PROFILE: Profile = {
-  name: 'Cyb3r Vishal',
-  headline: 'Cybersecurity | Developer',
-  bio: "I’m Vishal, a passionate web developer and ethical hacker pursuing a B.Sc. in Electronics at University of Delhi. My journey combines frontend development with cybersecurity research, where I focus on building secure, scalable web apps while testing and improving the security of digital systems.",
-  email: 'Anonymous@gmail.com',
+  name: 'Vishal Chauhan',
+  headline: 'Founder @CampusOS | Full Stack Developer | MERN Stack | DevOps',
+  bio: "I’m Vishal, the Founder of CampusOS and a passionate Full Stack Developer. I specialize in building scalable web applications using the MERN stack, integrating secure payment gateways, and deploying robust cloud infrastructure. With a strong background in cybersecurity, I ensure every application I build is secure by design.",
+  email: 'vishal.chauhan@example.com',
   phone: '+91 9999999992',
-  portfolio: 'https://cybervishal.netlify.app',
-  website: 'https://cybervishal.netlify.app',
+  portfolio: 'https://vishalchauhan.netlify.app',
+  website: 'https://vishalchauhan.netlify.app',
   github: 'https://github.com/cyb3r-vishal',
   twitter: 'https://x.com/VishalC69972174?t=VK9WXyT1BlRhjLOyIXzLOA&s=08',
   linkedin: 'https://linkedin.com/in/vishal-chauhan-0494492b5',

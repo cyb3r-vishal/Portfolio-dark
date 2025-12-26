@@ -52,7 +52,7 @@
   }
 }
 
-/* Black Hat Hacker Custom Styles */
+/* Custom Styles */
 @layer components {
   .font-hacker {
     font-family: 'Share Tech Mono', monospace;
@@ -85,18 +85,18 @@
   
   .glitch::before {
     left: 2px;
-    text-shadow: -2px 0 theme('colors.neon-red');
-    animation: glitch-animation 2s infinite linear alternate-reverse;
+    text-shadow: -1px 0 theme('colors.neon-red');
+    animation: glitch-animation 3s infinite linear alternate-reverse;
     clip-path: polygon(0 0, 100% 0, 100% 45%, 0 45%);
-    opacity: 0.8;
+    opacity: 0.5;
   }
   
   .glitch::after {
     left: -2px;
-    text-shadow: 2px 0 theme('colors.neon-green');
-    animation: glitch-animation 3s infinite linear alternate-reverse;
+    text-shadow: 1px 0 theme('colors.neon-green');
+    animation: glitch-animation 4s infinite linear alternate-reverse;
     clip-path: polygon(0 55%, 100% 55%, 100% 100%, 0 100%);
-    opacity: 0.8;
+    opacity: 0.5;
   }
   
   @keyframes glitch-animation {

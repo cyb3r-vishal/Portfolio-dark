@@ -18,24 +18,24 @@ const fadeIn = {
 
 const skillCategories = [
   {
-    title: "Penetration Testing",
-    icon: <FaBug className="text-primary text-xl" />,
-    skills: ["Vulnerability Assessment", "Web App Testing", "Network Security", "Social Engineering"]
-  },
-  {
-    title: "Defensive Security",
-    icon: <FaShieldAlt className="text-primary text-xl" />,
-    skills: ["Incident Response", "Security Monitoring", "Threat Intelligence", "Security Architecture"]
-  },
-  {
-    title: "Technical Skills",
+    title: "Full Stack Development",
     icon: <FaCode className="text-primary text-xl" />,
-    skills: ["Python", "Shell Scripting", "Network Protocols", "Cloud Security"]
+    skills: ["React", "Node.js", "Express", "MongoDB", "Next.js", "TypeScript", "Tailwind CSS"]
   },
   {
-    title: "Infrastructure",
+    title: "DevOps & Cloud",
     icon: <FaServer className="text-primary text-xl" />,
-    skills: ["Linux", "Windows Server", "AWS/Azure", "Docker", "Kubernetes"]
+    skills: ["AWS", "Docker", "Kubernetes", "CI/CD", "Nginx", "Linux Administration"]
+  },
+  {
+    title: "Backend & Architecture",
+    icon: <FaBug className="text-primary text-xl" />,
+    skills: ["REST APIs", "GraphQL", "Microservices", "Payment Gateways", "System Design", "Database Design"]
+  },
+  {
+    title: "Security & Tools",
+    icon: <FaShieldAlt className="text-primary text-xl" />,
+    skills: ["Web Security", "OAuth/JWT", "Git/GitHub", "Postman", "Penetration Testing"]
   }
 ];
 
@@ -108,7 +108,7 @@ const About = () => {
         >
           <div className="flex justify-center items-center mb-2">
             <div className="h-px w-12 bg-primary mr-4"></div>
-            <h2 className="font-mono text-primary text-sm uppercase tracking-wider">System Information</h2>
+            <h2 className="font-mono text-primary text-sm uppercase tracking-wider">Professional Profile</h2>
             <div className="h-px w-12 bg-primary ml-4"></div>
           </div>
           
@@ -118,8 +118,8 @@ const About = () => {
             <p className="text-muted-foreground mb-6">
               {profile.bio || (
                 <>
-                  Cybersecurity expert with over 8 years of experience in protecting digital assets and systems from advanced threats.
-                  Specializing in offensive security, penetration testing, and building robust defense mechanisms against evolving cyber attacks.
+                  Full Stack Developer with experience in building scalable web applications and cloud infrastructure.
+                  Specializing in MERN stack, DevOps, and secure coding practices.
                 </>
               )}
             </p>
@@ -130,9 +130,10 @@ const About = () => {
                 <span className="typing-effect">cat skills.txt</span>
               </div>
               <div className="pl-4">
-                <p>// Certified Ethical Hacker with expertise in security assessment</p>
-                <p>// Experienced in developing custom security tools and automation</p>
-                <p>// Advanced knowledge of threat detection and incident response</p>
+                <p>// Founder of CampusOS (campusos.app)</p>
+                <p>// Full Stack Developer with expertise in MERN stack</p>
+                <p>// Experienced in building scalable cloud infrastructure</p>
+                <p>// Passionate about clean code and modern web technologies</p>
               </div>
             </div>
           </div>

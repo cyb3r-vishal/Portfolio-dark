@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link, useLocation } from 'react-router-dom';
-import { FaLock, FaCode, FaBug, FaTerminal, FaNewspaper } from 'react-icons/fa';
+import { FaEnvelope, FaCode, FaUser, FaHome, FaBook } from 'react-icons/fa';
 import { useBlog } from '@/hooks/use-blog';
 
 const Navbar = () => {
@@ -38,17 +38,18 @@ const Navbar = () => {
   const publishedPostsCount = posts.filter(post => post.status === 'published').length;
 
   const navItems = [
-    { name: 'HOME', icon: <FaTerminal className="mr-1" />, href: '/', isScroll: false },
-    { name: 'ABOUT', icon: <FaCode className="mr-1" />, href: '#about', isScroll: true },
-    { name: 'EXPLOITS', icon: <FaBug className="mr-1" />, href: '#projects', isScroll: true },
+    { name: 'HOME', icon: <FaHome className="mr-1" />, href: '/', isScroll: false },
+    { name: 'ABOUT', icon: <FaUser className="mr-1" />, href: '#about', isScroll: true },
+    { name: 'EXPERIENCE', icon: <FaBook className="mr-1" />, href: '#experience', isScroll: true },
+    { name: 'PROJECTS', icon: <FaCode className="mr-1" />, href: '#projects', isScroll: true },
     { 
       name: 'BLOG', 
-      icon: <FaNewspaper className="mr-1" />,
+      icon: <FaBook className="mr-1" />,
       badge: publishedPostsCount > 0 ? publishedPostsCount : null,
       href: '/blog',
       isScroll: false
     },
-    { name: 'CONTACT', icon: <FaLock className="mr-1" />, href: '#contact', isScroll: true },
+    { name: 'CONTACT', icon: <FaEnvelope className="mr-1" />, href: '#contact', isScroll: true },
   ];
 
   const toggleMobileMenu = () => {
@@ -69,12 +70,12 @@ const Navbar = () => {
           whileHover={{ scale: 1.05 }}
         >
           <div className="font-hacker text-xl font-bold relative">
-            <span className="neon-text-green" data-text="BLACK">BLACK</span>
-            <span className="neon-text-red" data-text="HAT">HAT</span>
+            <span className="neon-text-green" data-text="PORT">PORT</span>
+            <span className="neon-text-red" data-text="FOLIO">FOLIO</span>
           </div>
           
           <div className="hidden md:flex ml-4 bg-muted px-2 py-1 rounded font-mono text-xs render-optimize">
-            <span className="text-primary mr-1">[SYS]</span>
+            <span className="text-primary mr-1">[DEV]</span>
             <span className="text-secondary">{timeString}</span>
           </div>
         </motion.div>

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { motion, useAnimation, useInView } from 'framer-motion';
-import { FaGithub, FaExternalLinkAlt, FaLock, FaShieldAlt, FaBug, FaCode } from 'react-icons/fa';
+import { FaGithub, FaExternalLinkAlt, FaLock, FaShieldAlt, FaBug, FaCode, FaServer } from 'react-icons/fa';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -20,9 +20,57 @@ const fadeIn = {
 const projectsData = [
   {
     id: 1,
+    title: "CampusOS",
+    description: "Founded and developed CampusOS, a comprehensive campus operating system for educational institutions. Manages student data, academics, and administration with a modern UI.",
+    image: "/images/campusos.jpg", 
+    tags: ["Startup", "React", "Node.js", "MongoDB", "AWS", "SaaS"],
+    links: {
+      github: "#",
+      live: "https://campusos.app/"
+    },
+    icon: <FaCode />
+  },
+  {
+    id: 2,
+    title: "E-Commerce Platform",
+    description: "Full-stack e-commerce solution with secure payment gateway integration (Stripe), user authentication, and admin dashboard.",
+    image: "/images/ecommerce.jpg",
+    tags: ["MERN Stack", "Redux", "Stripe", "Docker"],
+    links: {
+      github: "#",
+      live: "#"
+    },
+    icon: <FaCode />
+  },
+  {
+    id: 3,
+    title: "Cloud Infrastructure Manager",
+    description: "DevOps tool for automating cloud resource provisioning and monitoring using Terraform and AWS SDK.",
+    image: "/images/cloud-infra.jpg",
+    tags: ["Go", "AWS", "Terraform", "DevOps"],
+    links: {
+      github: "#",
+      live: "#"
+    },
+    icon: <FaServer />
+  },
+  {
+    id: 4,
+    title: "Secure Chat Application",
+    description: "Real-time messaging app with end-to-end encryption, supporting group chats and file sharing.",
+    image: "/images/secure-chat.jpg",
+    tags: ["Socket.io", "React", "Node.js", "Encryption"],
+    links: {
+      github: "#",
+      live: "#"
+    },
+    icon: <FaLock />
+  },
+  {
+    id: 5,
     title: "Vulnerability Scanner",
     description: "An advanced scanner that detects security vulnerabilities in web applications and networks.",
-    image: "vulnerability-scanner.jpg", // Would be in public/assets/
+    image: "vulnerability-scanner.jpg",
     tags: ["Python", "Security", "Automation"],
     links: {
       github: "#",
@@ -31,7 +79,7 @@ const projectsData = [
     icon: <FaBug />
   },
   {
-    id: 2,
+    id: 6,
     title: "Intrusion Detection System",
     description: "A machine learning-based system that monitors network traffic to identify unauthorized access attempts.",
     image: "ids-system.jpg",
@@ -41,30 +89,6 @@ const projectsData = [
       live: "#"
     },
     icon: <FaShieldAlt />
-  },
-  {
-    id: 3,
-    title: "Security Dashboard",
-    description: "Interactive dashboard for monitoring and visualizing security metrics and incidents in real-time.",
-    image: "/images/Dashboard.jpg",
-    tags: ["React", "D3.js", "API Integration"],
-    links: {
-      github: "#",
-      live: "#"
-    },
-    icon: <FaCode />
-  },
-  {
-    id: 4,
-    title: "Encryption Tool",
-    description: "End-to-end encryption tool for secure file transfer and communication between parties.",
-    image: "encryption-tool.jpg",
-    tags: ["Cryptography", "C++", "Security"],
-    links: {
-      github: "#",
-      live: "#"
-    },
-    icon: <FaLock />
   }
 ];
 
@@ -167,7 +191,7 @@ const Projects = () => {
         >
           <div className="flex justify-center items-center mb-2">
             <div className="h-px w-12 bg-primary mr-4"></div>
-            <h2 className="font-mono text-primary text-sm uppercase tracking-wider">Secure Assets</h2>
+            <h2 className="font-mono text-primary text-sm uppercase tracking-wider">My Work</h2>
             <div className="h-px w-12 bg-primary ml-4"></div>
           </div>
           
