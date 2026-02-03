@@ -1,8 +1,12 @@
-import { useState, useEffect } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link, useLocation } from 'react-router-dom';
-import { FaEnvelope, FaCode, FaUser, FaHome, FaBook } from 'react-icons/fa';
+import { FaEnvelope, FaCode, FaUser, FaHome, FaBook, FaSun } from 'react-icons/fa';
 import { useBlog } from '@/hooks/use-blog';
+import { Button } from '@/components/ui/button';
+import { startSiteSwitch } from '@/lib/siteSwitch';
+
+const DEFAULT_LIGHT_SITE_URL = 'https://vishalchauhan.in';
 
 const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
@@ -10,6 +14,10 @@ const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { posts, loadPosts } = useBlog();
   const location = useLocation();
+  const siteSwitchRef = useRef<HTMLButtonElement | null>(null);
+
+  const lightSiteUrl =
+    (import.meta.env.VITE_LIGHT_SITE_URL as string | undefined) ?? DEFAULT_LIGHT_SITE_URL;
 
   useEffect(() => {
     const handleScroll = () => {
@@ -54,6 +62,10 @@ const Navbar = () => {
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(prev => !prev);
+  };
+
+  const switchToLightSite = () => {
+    startSiteSwitch(lightSiteUrl, { originEl: siteSwitchRef.current, variant: 'light' });
   };
 
   return (
@@ -138,6 +150,27 @@ const Navbar = () => {
               );
             }
           })}
+
+          <motion.div whileHover={{ scale: 1.05 }}>
+            <button
+              type="button"
+              onClick={switchToLightSite}
+              title="Open main portfolio"
+              className="px-3 py-2 font-hacker text-sm font-medium hover:text-primary flex items-center relative overflow-hidden group"
+              ref={siteSwitchRef}
+            >
+              <span className="relative z-10 flex items-center">
+                <FaSun className="mr-1" />
+                LIGHT
+              </span>
+              <motion.span
+                className="absolute inset-0 bg-muted z-0"
+                initial={{ height: 0 }}
+                whileHover={{ height: '100%' }}
+                transition={{ duration: 0.1 }}
+              />
+            </button>
+          </motion.div>
         </nav>
         
         <button
@@ -221,6 +254,21 @@ const Navbar = () => {
                   );
                 }
               })}
+
+              <div className="pt-2">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={(e) =>
+                    startSiteSwitch(lightSiteUrl, { originEl: e.currentTarget, variant: 'light' })
+                  }
+                  className="w-full font-hacker"
+                  title="Open main portfolio"
+                >
+                  <FaSun className="mr-2" />
+                  Switch to light mode
+                </Button>
+              </div>
             </div>
           </motion.nav>
         )}

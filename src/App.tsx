@@ -9,6 +9,7 @@ import AdminLogin from '@/pages/AdminLogin';
 import AdminProfile from '@/pages/AdminProfile';
 import BlogPost from '@/pages/BlogPost';
 import BlogPage from '@/pages/BlogPage';
+import SiteSwitchOverlay from '@/components/SiteSwitchOverlay';
 
 // Lazy-load ProtectedRoute to avoid importing its dependencies on initial load
 const ProtectedRoute = lazy(() => import('@/components/layout/ProtectedRoute'));
@@ -19,6 +20,7 @@ const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <Toaster />
+      <SiteSwitchOverlay />
       <BrowserRouter>
         <Suspense fallback={null}>
           <Routes>
