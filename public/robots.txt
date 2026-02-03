@@ -4,3 +4,5 @@ Allow: /
 Disallow: /admin/
 Disallow: /secure/
 Disallow: /private/
+
+Sitemap: https://cyber.vishalchauhan.in/sitemap.xml
